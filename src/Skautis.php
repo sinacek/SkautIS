@@ -142,7 +142,7 @@ class Skautis {
 
     public function setAppId($appId) {
         $this->perStorage->init[self::APP_ID] = $appId;
-        $this->writeConfigToSession();
+        //$this->writeConfigToSession();
         return $this;
     }
 
@@ -161,7 +161,7 @@ class Skautis {
     public function setToken($token) {
         $this->perStorage->init[self::TOKEN] = $token;
         $this->active = array(); //zmenilo se prihlašování
-        $this->writeConfigToSession();
+        //$this->writeConfigToSession();
         return $this;
     }
 
@@ -179,7 +179,7 @@ class Skautis {
 
     public function setRoleId($roleId) {
         $this->perStorage->data[self::ID_ROLE] = (int) $roleId;
-        $this->writeConfigToSession();
+        //$this->writeConfigToSession();
         return $this;
     }
 
@@ -189,7 +189,7 @@ class Skautis {
 
     public function setUnitId($unitId) {
         $this->perStorage->data[self::ID_UNIT] = (int) $unitId;
-        $this->writeConfigToSession();
+        //$this->writeConfigToSession();
         return $this;
     }
 
@@ -205,42 +205,30 @@ class Skautis {
         throw new \BadFunctionCallException("Tato funkce jiz neni podporovana, pouzijte SessionAdapter");
     }
 
-    /**
-     * Inicializuje $this->perStorage
-     */
-    protected function initEmptyConfig() {
-        $this->perStorage = new \StdClass();
-        $this->perStorage->init = array();
-        $this->perStorage->data = array();
+    protected function loadConfig(AdapterInterface &$adapter) {
+        if (!$adapter->has(self::SESSION_ID)) {
+            $adapter->set(self::SESSION_ID, new \StdClass());
+            $adapter->get(self::SESSION_ID)->init = array();
+            $adapter->get(self::SESSION_ID)->data = array();
+        }
     }
 
 // </editor-fold>
 
     private function __construct(AdapterInterface $adapter = NULL, WSFactory $wsFactory = NULL) {
-        $this->perStorage = &$_SESSION["__" . __CLASS__]; //defaultni persistentní uloziste
 
-        if ($wsFactory === NULL) {
-            $this->wsFactory = new BasicWSFactory();
+        if ($adapter === NULL) {
+            $adapter = new SessionAdapter();
         }
+        $this->loadConfig($adapter);
+        $this->sessionAdapter = &$adapter;
+        $this->perStorage = &$this->sessionAdapter->get(self::SESSION_ID);
+        
+        $this->wsFactory = $wsFactory !== NULL ? $wsFactory : new BasicWSFactory();
 
         if (defined("Skautis_ID_Application")) {
             $this->setAppId(Skautis_ID_Application);
         }
-
-        if ($adapter !== NULL) {
-            $this->sessionAdapter = $adapter;
-
-            if ($this->sessionAdapter->has(self::SESSION_ID)) {
-                $this->perStorage = $this->sessionAdapter->get(self::SESSION_ID);
-                return;
-            }
-
-            $this->initEmptyConfig();
-            return;
-        }
-
-        $this->sessionAdapter = new SessionAdapter();
-        $this->initEmptyConfig();
     }
 
     /**
@@ -276,7 +264,7 @@ class Skautis {
             self::$instance->wsFactory = $wsFactory;
         }
 
-        self::$instance->writeConfigToSession();
+        //self::$instance->writeConfigToSession();
         return self::$instance;
     }
 
