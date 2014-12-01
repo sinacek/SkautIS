@@ -223,8 +223,8 @@ class Skautis {
             $this->wsFactory = new BasicWSFactory();
         }
 
-        if (defined("SkautIS_ID_Application")) {
-            $this->setAppId(SkautIS_ID_Application);
+        if (defined("Skautis_ID_Application")) {
+            $this->setAppId(Skautis_ID_Application);
         }
 
         if ($adapter !== NULL) {

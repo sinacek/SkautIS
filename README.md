@@ -1,4 +1,4 @@
-SkautIS
+Skautis
 =======
 
 PHP knihovna pro připojení do Skautisu
@@ -18,11 +18,11 @@ Composer je balíčkovací systém usnadňující práci s knihovnami, Detailně
 * pomocí konzole nainstalujte závislosti ``composer install``
 
 ## Základní nastavení
-Před prvním dotazem na SkautIS musíme nastavit **Application_ID** jedinečné pro naši aplikaci. Jako druhý argument můžeme uvést jestli aplikace běží v **testovacím režimu**. Výchozí nastavení je TRUE.
+Před prvním dotazem na Skautis musíme nastavit **Application_ID** jedinečné pro naši aplikaci. Jako druhý argument můžeme uvést jestli aplikace běží v **testovacím režimu**. Výchozí nastavení je TRUE.
 
 ```php
 <?php
-$skautis = SkautIS::getInstance("moje-application-id", $isTestMode = TRUE);
+$skautis = Skautis::getInstance("moje-application-id", $isTestMode = TRUE);
 ```
 
 ### Nette
